@@ -1,0 +1,112 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    ViewBag.Title = "Index";
+}
+<html>
+<head>
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+            position: relative;
+        }
+
+        #wrapper {
+            position: relative;
+        }
+
+        #overlay {
+            height: 400px;
+            width: 100%;
+            position: absolute;
+            top: 1000px;
+            left: 1000000px;
+            z-index: 10000000;
+        }
+    </style>
+</head>
+<body>
+    <h3>My Google Maps Demo</h3>
+    <div id="wrapper">
+        <div id="map"></div>
+        <div id="overay" style="border:3px solid #000000;">
+            <canvas id="drawing" style="border:1px solid #000000;"></canvas>
+        </div>
+
+    </div>
+
+    <div id="wrapper">
+        <div id="map"></div>
+        
+        <script>
+            var map;
+            function initMap() {
+                console.log("clicked");
+                var uluru = { lat: 0, lng: 0 };
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 4,
+                    draggable: false,
+                    center: uluru
+                });
+                var overlay = new google.maps.OverlayView();
+                var isDrawing = true;
+                var latlng = new google.maps.LatLng(46.779231, -41.01);
+                var polyLine;
+                var pH = Array();
+                
+                map.addListener('mousedown', draw);
+
+                function draw() {
+                    console.log("clicked");
+                    isDrawing = true;
+                    polyLine = new google.maps.Polyline({
+                        map: map
+                    });
+                    poly = new google.maps.Polyline({
+                        strokeColor: '#000000',
+                        strokeOpacity: 1.0,
+                        strokeWeight: 3
+                    });
+                    poly.setMap(map);
+
+                    $("#map").mousemove(function (e) {
+                        if (isDrawing) {
+                            var x = e.page.x;
+                            var y = e.page.y;
+                            var p = new google.maps.Point(parseInt(x), parseInt(y));
+                            var loc = overlay.getProjection().fromDivPixelToLatLng(p);
+
+                            polyLine.getPath().push(latLng);
+
+                            latLng = String(latLng);
+                            latLng = latLng.replace("(", "");
+                            latLng = latLng.replace(")", "");
+
+                            var array_lng = latLng.split(',');
+                            parcelleHeig.push(new google.maps.LatLng(array_lng[0], array_lng[1]));
+                        }
+                    });
+
+                }
+                google.maps.event.addListener(map, 'mouseup', function () {
+
+                    isDrawing = false;
+                });
+
+
+           
+            }
+           
+            
+            
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtpBRApL2t6VMjTCVepLdTDTGq-MUzgE0&callback=initMap">
+        </script>
+        
+    </div>
+</body>
+</html>
+
